@@ -10,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".room.OtherActivity"></activity>
+        <activity android:name=".mmkv.MmkvActivity"></activity>
+        <activity android:name=".sp.SpActivity" />
+        <activity android:name=".room.OtherActivity" />
         <activity
             android:name=".room.RoomActivity"
             android:label="Room" />

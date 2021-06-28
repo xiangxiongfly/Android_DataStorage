@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapplication.litepal.LitePalActivity
+import com.example.myapplication.mmkv.MmkvActivity
 import com.example.myapplication.room.RoomActivity
+import com.example.myapplication.sp.SpActivity
 import com.example.myapplication.sqlite.SQLiteActivity
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,5 +27,13 @@ class MainActivity : AppCompatActivity() {
 
     fun clickRoom(v: View) {
         startActivity(Intent(this, RoomActivity::class.java))
+    }
+
+    fun clickSp(v: View) {
+        startActivity(Intent(this, SpActivity::class.java))
+    }
+
+    fun clickMmkv(v: View) {
+        startActivity(Intent(this, MmkvActivity::class.java))
     }
 }

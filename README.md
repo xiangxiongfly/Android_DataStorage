@@ -5,3 +5,7 @@
 ## LitePal
 
 ## Room
+
+## SharedPreference
+
+## MMKV
