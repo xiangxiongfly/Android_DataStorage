@@ -32,5 +32,15 @@ class MmkvActivity : AppCompatActivity() {
             val hobby = mmkv.decodeStringSet("hobby")
             binding.tvContent.text = "姓名：$name，年龄：$age，性别：$sex，爱好：$hobby"
         }
+
+        binding.btnRemove.setOnClickListener {
+            val mmkv = MMKV.defaultMMKV()
+            mmkv.remove("name")
+        }
+
+        binding.btnClear.setOnClickListener {
+            val mmkv = MMKV.defaultMMKV()
+            mmkv.clearAll()
+        }
     }
 }
