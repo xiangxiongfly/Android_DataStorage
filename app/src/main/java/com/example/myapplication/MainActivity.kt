@@ -9,6 +9,7 @@ import com.example.myapplication.mmkv.MmkvActivity
 import com.example.myapplication.room.RoomActivity
 import com.example.myapplication.sp.SpActivity
 import com.example.myapplication.sqlite.SQLiteActivity
+import com.example.myapplication.storage.StorageActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,5 +36,9 @@ class MainActivity : AppCompatActivity() {
 
     fun clickMmkv(v: View) {
         startActivity(Intent(this, MmkvActivity::class.java))
+    }
+
+    fun clickStorage(v:View){
+        startActivity(Intent(this, StorageActivity::class.java))
     }
 }

@@ -41,6 +41,11 @@
             android:onClick="clickMmkv"
             android:text="MMKV" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="clickStorage"
+            android:text="数据存储" />
 
     </LinearLayout>
 </ScrollView>
