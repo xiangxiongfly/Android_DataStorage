@@ -9,6 +9,8 @@ import com.example.myapplication.mmkv.MmkvActivity
 import com.example.myapplication.room.RoomActivity
 import com.example.myapplication.sp.SpActivity
 import com.example.myapplication.sqlite.SQLiteActivity
+import com.example.myapplication.storage.FileStorage1Activity
+import com.example.myapplication.storage.FileStorage2Activity
 import com.example.myapplication.storage.StorageActivity
 
 
@@ -38,7 +40,15 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, MmkvActivity::class.java))
     }
 
-    fun clickStorage(v:View){
+    fun clickStorage(v: View) {
         startActivity(Intent(this, StorageActivity::class.java))
+    }
+
+    fun clickStorage1(v: View) {
+        startActivity(Intent(this, FileStorage1Activity::class.java))
+    }
+
+    fun clickStorage2(v: View) {
+        startActivity(Intent(this, FileStorage2Activity::class.java))
     }
 }

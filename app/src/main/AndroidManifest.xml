@@ -8,12 +8,8 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
-    <uses-permission
-        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-
     <application
-        android:name=".BaseApp"
+        android:name=".BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,10 +17,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
+        <activity android:name=".storage.PhotosActivity" />
+        <activity
+            android:name=".storage.FileStorage2Activity"
+            android:label="文件存储（Android11及以上）" />
+        <activity
+            android:name=".storage.FileStorage1Activity"
+            android:label="文件存储（Android9及以下）" />
         <activity android:name=".storage.StorageActivity" />
-        <activity android:name=".mmkv.MmkvActivity" />
-        <activity android:name=".sp.SpActivity" />
-        <activity android:name=".room.OtherActivity" />
+        <activity
+            android:name=".mmkv.MmkvActivity"
+            android:label="MMKV" />
+        <activity
+            android:name=".sp.SpActivity"
+            android:label="SharedPreference" />
+        <activity
+            android:name=".room.OtherActivity"
+            android:label="Room" />
         <activity
             android:name=".room.RoomActivity"
             android:label="Room" />
@@ -37,7 +46,6 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

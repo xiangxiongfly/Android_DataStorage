@@ -1,14 +1,21 @@
 package com.example.myapplication
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import com.tencent.mmkv.MMKV
 import org.litepal.LitePal
 
 
-class BaseApp : Application() {
+class BaseApplication : Application() {
+    companion object {
+        lateinit var context: Context
+    }
+
     override fun onCreate() {
         super.onCreate()
+        context = this
+
         //初始化LitePal
         LitePal.initialize(this)
 

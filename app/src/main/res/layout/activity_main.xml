@@ -47,5 +47,17 @@
             android:onClick="clickStorage"
             android:text="数据存储" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="clickStorage1"
+            android:text="文件存储（Android9及以下版本）" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="clickStorage2"
+            android:text="文件存储（Android11 及以上版本）" />
+
     </LinearLayout>
 </ScrollView>
