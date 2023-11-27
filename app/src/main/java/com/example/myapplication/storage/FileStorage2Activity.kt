@@ -1,5 +1,6 @@
 package com.example.myapplication.storage
 
+import android.Manifest
 import android.app.Activity
 import android.content.ContentUris
 import android.content.ContentValues
@@ -11,15 +12,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivityFileStorage2Binding
+import com.example.myapplication.isExternalStorageManager
 import com.example.myapplication.toast
 import java.io.*
 
-const val REQUEST_IMAGE_CODE = 123
+const val REQUEST_IMAGE_SINGLE_CODE = 123
+const val REQUEST_IMAGE_MULTIPLE_CODE = 456
 
 class FileStorage2Activity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityFileStorage2Binding
@@ -30,8 +36,14 @@ class FileStorage2Activity : AppCompatActivity() {
         setContentView(viewBinding.root)
     }
 
+    fun requestReadPermission(view: View) {
+        ActivityCompat.requestPermissions(
+            this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_PERMISSIONS_CODE
+        )
+    }
+
     fun checkScopedStorage(view: View) {
-        toast("是否开启分区存储：${isScopedStorage()}")
+        toast("检查是否授予管理所有文件的权限：${isExternalStorageManager()}")
     }
 
     fun saveImage(view: View) {
@@ -111,6 +123,7 @@ class FileStorage2Activity : AppCompatActivity() {
      */
     fun deleteImage(view: View) {
         val displayName = "aaa.png"
+//        val displayName = "ccc.jpg"
         val selection = MediaStore.Images.Media.DISPLAY_NAME + "=?"
         val selectionArgs = arrayOf(displayName)
         val row: Int = contentResolver.delete(
@@ -167,22 +180,39 @@ class FileStorage2Activity : AppCompatActivity() {
         }
     }
 
-    fun pickImage(view: View) {
+    fun pickSingleImage(view: View) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "image/*"
-        startActivityForResult(intent, REQUEST_IMAGE_CODE)
+        startActivityForResult(intent, REQUEST_IMAGE_SINGLE_CODE)
+    }
+
+    fun pickMultipleImage(view: View) {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) //多选
+        intent.type = "image/*"
+        startActivityForResult(intent, REQUEST_IMAGE_MULTIPLE_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                REQUEST_IMAGE_CODE -> {
-                    if (data != null) {
-                        val uri = data.data
+                REQUEST_IMAGE_SINGLE_CODE -> {
+                    data?.let {
+                        val uri = it.data
                         Log.e("TAG", "uri: $uri")
                         viewBinding.imageView.setImageURI(uri)
+                    }
+                }
+                REQUEST_IMAGE_MULTIPLE_CODE -> {
+                    if (data != null && data.clipData != null) {
+                        with(data.clipData!!) {
+                            for (i in 0 until this.itemCount) {
+                                Log.e("TAG", "${i} uri: ${this.getItemAt(i).uri}")
+                            }
+                        }
                     }
                 }
             }
@@ -207,5 +237,54 @@ class FileStorage2Activity : AppCompatActivity() {
         bos.close()
         bis.close()
         viewBinding.imageView.setImageURI(Uri.parse(imageFile.absolutePath))
+    }
+
+    fun requestAllFilesPermission(view: View) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+            AlertDialog.Builder(this)
+                .setMessage("本程序需要授予管理所有文件的权限")
+                .setPositiveButton("确定") { dialog, which ->
+                    val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                    startActivity(intent)
+                }
+                .show()
+        } else {
+            toast("您已获得访问所有文件权限")
+        }
+    }
+
+    fun testWrite(view: View) {
+        if (isExternalStorageManager()) {
+            val content = "hello test123456"
+            val fileName = "test123456.txt"
+            val file = File(Environment.getExternalStorageDirectory(), fileName)
+            val output = FileOutputStream(file)
+            output.write(content.toByteArray())
+            output.flush()
+            output.close()
+        } else {
+            toast("未授权")
+        }
+    }
+
+    fun testRead(view: View) {
+        if (isExternalStorageManager()) {
+            val fileName = "test123456.txt"
+            val file = File(Environment.getExternalStorageDirectory(), fileName)
+            if (file.exists()) {
+                var content = ""
+                val input = FileInputStream(file)
+                val buffer = ByteArray(1024)
+                var len = 0
+                while ((input.read(buffer).also { len = it }) != -1) {
+                    val str = String(buffer, 0, len)
+                    content += str
+                }
+                input.close()
+                Log.e("TAG", "content: $content")
+            }
+        } else {
+            toast("未授权")
+        }
     }
 }

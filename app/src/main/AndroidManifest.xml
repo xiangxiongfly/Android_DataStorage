@@ -7,6 +7,9 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <application
         android:name=".BaseApplication"
@@ -24,7 +27,6 @@
         <activity
             android:name=".storage.FileStorage1Activity"
             android:label="文件存储（Android9及以下）" />
-        <activity android:name=".storage.StorageActivity" />
         <activity
             android:name=".mmkv.MmkvActivity"
             android:label="MMKV" />

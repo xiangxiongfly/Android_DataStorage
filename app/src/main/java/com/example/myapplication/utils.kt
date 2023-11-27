@@ -23,9 +23,9 @@ fun isMounted(): Boolean {
 }
 
 /**
- * 判断是否开启分区尺寸
+ * 判断是否已授权SD卡所有权
  */
-fun isScopedStorage(): Boolean =
+fun isExternalStorageManager(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && Environment.isExternalStorageManager()
 
 /**

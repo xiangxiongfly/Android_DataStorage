@@ -11,8 +11,6 @@ import com.example.myapplication.sp.SpActivity
 import com.example.myapplication.sqlite.SQLiteActivity
 import com.example.myapplication.storage.FileStorage1Activity
 import com.example.myapplication.storage.FileStorage2Activity
-import com.example.myapplication.storage.StorageActivity
-
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,10 +36,6 @@ class MainActivity : AppCompatActivity() {
 
     fun clickMmkv(v: View) {
         startActivity(Intent(this, MmkvActivity::class.java))
-    }
-
-    fun clickStorage(v: View) {
-        startActivity(Intent(this, StorageActivity::class.java))
     }
 
     fun clickStorage1(v: View) {

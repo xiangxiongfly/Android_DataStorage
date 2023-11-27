@@ -19,8 +19,14 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="requestReadPermission"
+                android:text="获取读权限" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:onClick="checkScopedStorage"
-                android:text="是否开启分区存储" />
+                android:text="检查文件所有权限" />
 
             <Button
                 android:layout_width="match_parent"
@@ -66,14 +72,44 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="pickImage"
-                android:text="使用系统文件选择器" />
+                android:onClick="pickSingleImage"
+                android:text="使用系统文件选择器(单选)" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="pickMultipleImage"
+                android:text="使用系统文件选择器(多选)" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="copyImage"
                 android:text="复制图片到本应用程序下" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="copyImage"
+                android:text="复制图片到本应用程序下" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="requestAllFilesPermission"
+                android:text="授予管理所有文件的权限" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="testWrite"
+                android:text="测试文件写" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="testRead"
+                android:text="测试文件读" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
