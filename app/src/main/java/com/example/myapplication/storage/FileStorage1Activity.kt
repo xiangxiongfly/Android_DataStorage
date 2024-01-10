@@ -18,6 +18,9 @@ import java.io.FileOutputStream
 const val TAG = "TAG"
 const val REQUEST_PERMISSIONS_CODE = 123
 
+/**
+ * Android9及以下版本
+ */
 class FileStorage1Activity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityFileStorage1Binding
 
@@ -49,6 +52,13 @@ class FileStorage1Activity : AppCompatActivity() {
                 TAG,
                 "Environment.getExternalStorageDirectory(): ${Environment.getExternalStorageDirectory()}"
             ) // /storage/emulated/0
+
+            Log.e(
+                TAG,
+                "Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES): ${
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                }"
+            ) // /storage/emulated/0/Pictures
 
             fileList().forEach {
                 Log.e(TAG, "内部存储文件: ${it}")

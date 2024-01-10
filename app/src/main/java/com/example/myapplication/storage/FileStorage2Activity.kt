@@ -16,9 +16,9 @@ import android.provider.Settings
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.myapplication.R
+import com.example.myapplication.base.BaseActivity
 import com.example.myapplication.databinding.ActivityFileStorage2Binding
 import com.example.myapplication.isExternalStorageManager
 import com.example.myapplication.toast
@@ -27,7 +27,10 @@ import java.io.*
 const val REQUEST_IMAGE_SINGLE_CODE = 123
 const val REQUEST_IMAGE_MULTIPLE_CODE = 456
 
-class FileStorage2Activity : AppCompatActivity() {
+/**
+ * Android11及以上版本
+ */
+class FileStorage2Activity : BaseActivity() {
     private lateinit var viewBinding: ActivityFileStorage2Binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +41,9 @@ class FileStorage2Activity : AppCompatActivity() {
 
     fun requestReadPermission(view: View) {
         ActivityCompat.requestPermissions(
-            this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_PERMISSIONS_CODE
+            this,
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+            REQUEST_PERMISSIONS_CODE
         )
     }
 
@@ -46,6 +51,9 @@ class FileStorage2Activity : AppCompatActivity() {
         toast("检查是否授予管理所有文件的权限：${isExternalStorageManager()}")
     }
 
+    /**
+     * 通过MediaStore保存图片到相册
+     */
     fun saveImage(view: View) {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.aaa)
 //        val displayName = "${System.currentTimeMillis()}.png"
@@ -53,18 +61,20 @@ class FileStorage2Activity : AppCompatActivity() {
         val mineType = "image/png"
         val format = Bitmap.CompressFormat.PNG
 
-        val contentValues = ContentValues()
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, mineType)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-//            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM)
-        } else {
-            contentValues.put(
-                MediaStore.MediaColumns.DATA,
-                Environment.getExternalStorageDirectory().path + File.separator + Environment.DIRECTORY_DCIM + File.separator + displayName
-            )
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, displayName)
+            put(MediaStore.MediaColumns.MIME_TYPE, mineType)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM)
+                //DIRECTORY_DCIM 相册，DIRECTORY_PICTURES 图片
+            } else {
+                put(
+                    MediaStore.MediaColumns.DATA,
+                    Environment.getExternalStorageDirectory().path + File.separator + Environment.DIRECTORY_DCIM + File.separator + displayName
+                )
+            }
         }
+
         val uri =
             contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         if (uri != null) {
@@ -79,7 +89,7 @@ class FileStorage2Activity : AppCompatActivity() {
 
     /**
      * 可以获取本应用程序的图片
-     * 其他应用程序的图片需要申请读权限
+     * 其他应用程序的图片需要申请READ_EXTERNAL_STORAGE权限
      */
     fun getImage(view: View) {
         val displayName = "aaa.png"
@@ -151,6 +161,9 @@ class FileStorage2Activity : AppCompatActivity() {
         Log.e("TAG", "修改成功：$row")
     }
 
+    /**
+     * 保存文件到Downloads目录下
+     */
     fun saveDownload(view: View) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             toast("只支持Android_10及以上版本")
@@ -158,9 +171,10 @@ class FileStorage2Activity : AppCompatActivity() {
         }
         val content = "这是一些测试数据，分区存储123"
         val fileName = "test.txt"
-        val contentValues = ContentValues()
-        contentValues.put(MediaStore.Downloads.DISPLAY_NAME, fileName)
-        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+        }
         val resultUri =
             contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
         if (resultUri != null) {
@@ -180,18 +194,26 @@ class FileStorage2Activity : AppCompatActivity() {
         }
     }
 
+    /**
+     * 使用文件选择器
+     */
     fun pickSingleImage(view: View) {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.type = "image/*"
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+        }
         startActivityForResult(intent, REQUEST_IMAGE_SINGLE_CODE)
     }
 
+    /**
+     * 使用文件选择器
+     */
     fun pickMultipleImage(view: View) {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) //多选
-        intent.type = "image/*"
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) //多选
+            type = "image/*"
+        }
         startActivityForResult(intent, REQUEST_IMAGE_MULTIPLE_CODE)
     }
 
@@ -239,6 +261,9 @@ class FileStorage2Activity : AppCompatActivity() {
         viewBinding.imageView.setImageURI(Uri.parse(imageFile.absolutePath))
     }
 
+    /**
+     * 申请所有权
+     */
     fun requestAllFilesPermission(view: View) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
             AlertDialog.Builder(this)
@@ -253,6 +278,7 @@ class FileStorage2Activity : AppCompatActivity() {
         }
     }
 
+    // 测试所有权
     fun testWrite(view: View) {
         if (isExternalStorageManager()) {
             val content = "hello test123456"
@@ -267,6 +293,7 @@ class FileStorage2Activity : AppCompatActivity() {
         }
     }
 
+    // 测试所有权
     fun testRead(view: View) {
         if (isExternalStorageManager()) {
             val fileName = "test123456.txt"

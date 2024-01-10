@@ -4,8 +4,11 @@ import android.content.Context
 import android.graphics.Point
 import android.os.Build
 import android.os.Environment
+import android.os.Environment.DIRECTORY_PICTURES
 import android.view.WindowManager
 import android.widget.Toast
+import java.io.File
+
 
 /**
  * Toast
@@ -40,4 +43,11 @@ fun getScreenWidth(): Int {
         wm.defaultDisplay.getSize(point)
     }
     return point.x
+}
+
+fun createTmpFile(context: Context): File {
+    //使用媒体目录存储媒体文件
+    val dir = context.getExternalFilesDir(DIRECTORY_PICTURES)
+    //创建临时文件并返回
+    return File.createTempFile("zhaopian", "jpg", dir)
 }
